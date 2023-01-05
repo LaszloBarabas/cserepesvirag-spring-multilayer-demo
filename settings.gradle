@@ -1,0 +1,4 @@
+rootProject.name = 'Cserepes'
+include 'application'
+include 'persistency'
+include 'domain'
