@@ -1,23 +1,15 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will build a package using Gradle and then publish it to GitHub packages when a release is created
-# For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Publishing-using-gradle
-
-name: Gradle Create JAR Package
-
-on:
-  push:
   
+name: AzureSpringCloud
+on: push
+env:
+  ASC_PACKAGE_PATH: ${{ github.workspace }}
+  AZURE_SUBSCRIPTION: 11069f99-fa10-4521-941f-7e87c05ab3fc 
+
 jobs:
-  build:
-
+  deploy_to_production:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
+    name: deploy to production with artifact
+    
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 11
@@ -25,20 +17,25 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin'
-        server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-        settings-path: ${{ github.workspace }} # location for the settings.xml file
-
+        server-id: github 
+        settings-path: ${{ github.workspace }}
+      
     - name: Build with Gradle
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       with:
-        arguments: build
+        arguments: build    
 
-    # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
-    # the publishing section of your build.gradle
-    - name: Publish to GitHub Packages
-      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+    - name: Login via Azure CLI
+      uses: azure/login@v1
       with:
-        arguments: publish
-      env:
-        USERNAME: ${{ github.actor }}
-        TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        creds: ${{ secrets.AZURE_SPRING_CD_DEMO_CREDENTIALS }}
+
+    - name: deploy to production with artifact
+      uses: azure/spring-cloud-deploy@v1
+      with:
+        azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
+        action: Deploy
+        service-name: spring-multilayer-cd-service
+        app-name: cserepes
+        use-staging-deployment: false
+        package: ${{ env.ASC_PACKAGE_PATH }}/application/**/application-0.0.1-SNAPSHOT.jar
