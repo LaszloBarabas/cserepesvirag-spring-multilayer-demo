@@ -28,14 +28,14 @@ jobs:
     - name: Login via Azure CLI
       uses: azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_SPRING_CD_DEMO_CREDENTIALS }}
+        creds: ${{ secrets.AZURE_UBB_SECRETS}}
 
     - name: deploy to production with artifact
       uses: azure/spring-cloud-deploy@v1
       with:
         azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
         action: Deploy
-        service-name: spring-multilayer-cd-service
-        app-name: cserepes
+        service-name: spring-2-ml-service
+        app-name: cserepesvirag
         use-staging-deployment: false
         package: ${{ env.ASC_PACKAGE_PATH }}/application/**/application-0.0.1-SNAPSHOT.jar
