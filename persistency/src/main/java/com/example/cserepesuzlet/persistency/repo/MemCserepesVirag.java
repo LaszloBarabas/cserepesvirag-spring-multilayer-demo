@@ -16,7 +16,7 @@ public class MemCserepesVirag extends CserepesViragRepoInst{
         csp3.setId("3");
         csp4.setId("4");
         csp1.setName("Cserepes Azalea");
-        csp2.setName("Cserepes Afrimai Ibolya");
+        csp2.setName("Cserepes Afrikai Ibolya");
         csp3.setName("Cserepes Fokfoldi Kankalin");
         csp4.setName("Cserepes Koszorufutoka");
         entities.add(csp1);
